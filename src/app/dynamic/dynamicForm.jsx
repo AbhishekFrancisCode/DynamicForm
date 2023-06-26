@@ -13,6 +13,9 @@ import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-inputs/styles/material.css";
 import "@syncfusion/ej2-react-dropdowns/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup";
+
 
 const dynamicForm = {
   firstName: {
@@ -24,7 +27,7 @@ const dynamicForm = {
       required: true,
     },
   },
-  lastName: {
+  email: {
     label: "Email",
     type: "text",
     placeholder: "Enter your email address",
@@ -61,6 +64,12 @@ const dynamicForm = {
     },
   },
 };
+
+const schema = yup.object({
+  firstName: yup.string().required().min(2).max(120).label("Name"),
+  email: yup.string().email()
+});
+
 
 //Error Component
 const Error = ({ children }) => <p style={{ color: "red" }}>{children}</p>;
@@ -117,7 +126,9 @@ const Dynamic = () => {
     control,
     // watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const formInputs = Object.keys(dynamicForm).map((e) => {
     const { rules, defaultValue, label } = dynamicForm[e];
@@ -130,6 +141,7 @@ const Dynamic = () => {
           control={control}
           rules={rules}
           defaultValue={defaultValue}
+          error={true}
           render={({ field }) => (
             <div>
               <Input
@@ -147,10 +159,8 @@ const Dynamic = () => {
 
   const onSubmit = (data) => console.log(data);
 
-  // console.log(watch("example")); // watch input value by passing the name of it
 
   return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <div className="wrapper">
       <h2 className="text-black">Dynamic Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
