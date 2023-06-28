@@ -13,66 +13,16 @@ import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-inputs/styles/material.css";
 import "@syncfusion/ej2-react-dropdowns/styles/material.css";
 import "@syncfusion/ej2-buttons/styles/material.css";
-import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
-
-
-const dynamicForm = {
-  firstName: {
-    label: "Name",
-    type: "text",
-    placeholder: "Enter your first name",
-    defaultValue: "",
-    rules: {
-      required: true,
-    },
-  },
-  email: {
-    label: "Email",
-    type: "text",
-    placeholder: "Enter your email address",
-    defaultValue: "",
-    rules: {
-      required: true,
-    },
-  },
-  gender: {
-    label: "Gender",
-    type: "radio",
-    options: ["male"],
-    defaultValue: true,
-    rules: {
-      required: true,
-    },
-  },
-  profession: {
-    label: "Profession",
-    type: "dropdown",
-    options: ["Frontend Developer", "Backend Developer", "Devops Engineer"],
-    defaultValue: "",
-    rules: {
-      required: true,
-    },
-  },
-  agree: {
-    type: "checkbox",
-    label: "",
-    checkboxLabel: "I hereby agree to the terms.",
-    defaultValue: false,
-    rules: {
-      required: true,
-    },
-  },
-};
-
-const schema = yup.object({
-  firstName: yup.string().required().min(2).max(120).label("Name"),
-  email: yup.string().email()
-});
+import { dynamicForm,schema } from "./formSchema";
 
 
 //Error Component
 const Error = ({ children }) => <p style={{ color: "red" }}>{children}</p>;
+function testLetterRegex(value) {
+  const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ ]*$/.test(value);
+  return regex;
+}
 
 const Input = ({ value, onChange, type, ...rest }) => {
   switch (type) {
@@ -81,7 +31,10 @@ const Input = ({ value, onChange, type, ...rest }) => {
         <TextBoxComponent
         className=" p-4 text-gray-600"
           placeholder={rest?.placeholder}
-          change={({ value }) => onChange(value)}
+          onChange={(value) => {
+            console.log(value)
+            onChange(value)
+          }}
           value={value}
         />
       );
